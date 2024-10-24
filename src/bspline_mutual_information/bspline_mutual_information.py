@@ -80,12 +80,14 @@ def bspline_bin(
 
     """
     try:
-        data = np.array(data)
-    except Exception as e:
+        data = np.array(data, dtype=float)
+    except ValueError as e:
         raise e
 
-    # TODO: add check if the array is 1 dimensional
-    # TODO: add check if the array only contains floats
+    if data.ndim != 1:
+        raise ValueError(
+            f"'data' has {data.ndim} dimensions. 1-D array expected."
+        )
 
     degree = order - 1 # BSpline.design_matrix uses degree as argument
     knots = range(0, (bins + order), 1)
@@ -188,12 +190,17 @@ def mutual_information(
     try:
         x = np.array(x, dtype=float)
         y = np.array(y, dtype=float)
-    except Exception as e:
+    except ValueError as e:
         raise e
-
-    # TODO: add check if the array is 1 dimensional
-    # TODO: add check if the array only contains floats
-
+    
+    if x.ndim != 1:
+        raise ValueError(
+            f"'x' has {x.ndim} dimensions. 1-D array expected."
+        )
+    if y.ndim != 1:
+        raise ValueError(
+            f"'y' has {y.ndim} dimensions. 1-D array expected."
+        )
 
     # checking / filtering x & y to positions where both of the arrays
     # contain values that are defined (not NaN)
