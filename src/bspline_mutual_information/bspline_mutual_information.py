@@ -57,7 +57,7 @@ def bspline_bin(
 
     Example
     -------
-    >>> from valpas.utils.b_spline import bspline_bin
+    >>> from bspline_mutual_information import bspline_bin
     >>> x = [1,2,3,4,5]
     >>> bspline_bin(data=x, bins=3, order=2)
     array([[1. , 0. , 0. ],
@@ -107,46 +107,6 @@ def bspline_bin(
     return design_matrix
 
 
-def _transform_data(
-        data: np.ndarray,
-        bspline_min: int,
-        bspline_max: int
-        ) -> np.ndarray:
-    """
-    Internal helper function to transform values into the domain of 
-    B-Spline functions for use in :func:`bspline_bin`.
-
-    Parameters
-    ----------
-    data : numpy.ndarray
-        Array containing values to be transformed into domain of
-        B-spline functions
-    bspline_min : int
-        Required lower knot of the B-spline function definition. 
-        Generally `bspline_min = knots[degree]` where 
-        :math:`knots = {0, 1, ..., K}, K = bins + order` and
-        :math:`degree = order - 1` 
-    bspline_max : int
-        Required upper know of the B-spline function definition.
-        Generally `bspline_max = knots[bins]` where
-        :math:`knots = {0, 1, ..., K}, K = bins + order`
-
-    Returns
-    -------
-    data_t : numpy.ndarray
-        1-dimensional array containing the transformed values of 
-        ``data``
-    """
-    data_t = (
-        (data - min(data))
-        * (bspline_max - bspline_min)
-        / (max(data) - min(data))
-        + bspline_min
-    )
-
-    return data_t
-
-
 def mutual_information(
         x: ArrayLike,
         y: ArrayLike,
@@ -191,7 +151,7 @@ def mutual_information(
     
     Example
     -------
-    >>> from valpas.utils.b_spline import mutual_information
+    >>> from bspline_mutual_information import mutual_information
     >>> x = [1,2,3,4,5]
     >>> y = [1,2,1,2,3]
     >>> mutual_information(x, y, bins=5, spline_order=3)
@@ -297,3 +257,43 @@ def mutual_information(
             mi = mi - (bins - 1) / (2 * len(x_defined_vals))
 
     return mi
+
+
+def _transform_data(
+        data: np.ndarray,
+        bspline_min: int,
+        bspline_max: int
+        ) -> np.ndarray:
+    """
+    Internal helper function to transform values into the domain of 
+    B-Spline functions for use in :func:`bspline_bin`.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        Array containing values to be transformed into domain of
+        B-spline functions
+    bspline_min : int
+        Required lower knot of the B-spline function definition. 
+        Generally `bspline_min = knots[degree]` where 
+        :math:`knots = {0, 1, ..., K}, K = bins + order` and
+        :math:`degree = order - 1` 
+    bspline_max : int
+        Required upper know of the B-spline function definition.
+        Generally `bspline_max = knots[bins]` where
+        :math:`knots = {0, 1, ..., K}, K = bins + order`
+
+    Returns
+    -------
+    data_t : numpy.ndarray
+        1-dimensional array containing the transformed values of 
+        ``data``
+    """
+    data_t = (
+        (data - min(data))
+        * (bspline_max - bspline_min)
+        / (max(data) - min(data))
+        + bspline_min
+    )
+
+    return data_t
