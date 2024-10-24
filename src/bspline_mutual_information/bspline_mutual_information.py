@@ -18,6 +18,7 @@ References
 """
 
 from typing import Optional
+import warnings
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -245,11 +246,20 @@ def mutual_information(
                 y_bin_associations
                 ) / len(x)
             ).flatten('F') 
-        # calculation of the Shannon entropy H(A) where A = x & y
-        h_x = -np.nansum(p_x * np.log2(p_x))
-        h_y = -np.nansum(p_y * np.log2(p_y))
-        # calculation of the joint entropy H(A,B)
-        h_x_y = -np.nansum(p_x_y * np.log2(p_x_y))
+        
+        # In certain circumstances the algorithm can produce divisions
+        # by zero in in the calculation of the entropies. In those cases
+        # numpy raises warnings. The result is that those instances
+        # generate NaNs. Those generated NaNs are removed in the 
+        # summation (using np.nansum). The with-statement catches those
+        # warnings and supresses them.
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            # calculation of the Shannon entropy H(A) where A = x & y
+            h_x = -np.nansum(p_x * np.log2(p_x))
+            h_y = -np.nansum(p_y * np.log2(p_y))
+            # calculation of the joint entropy H(A,B)
+            h_x_y = -np.nansum(p_x_y * np.log2(p_x_y))
 
         # mutual information based on calculated entropies
         mi = float(h_x + h_y - h_x_y)
