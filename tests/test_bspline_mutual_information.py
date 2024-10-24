@@ -38,9 +38,34 @@ def test_mutual_information():
     assert result == expected_result
 
 
-def test_mutual_information_correct():
-    
+def test_bspline_bin_for_val_error():
+
+    from bspline_mutual_information import bspline_bin
+
+    x = [1,2,3,4, "foo"]
+    with pytest.raises(ValueError) as excinfo:
+        bspline_bin(x)    
+    assert excinfo.type is ValueError
+
+    x = [[1,2,3], [4,5,6]]
+    with pytest.raises(ValueError) as excinfo:
+        bspline_bin(x)    
+    assert excinfo.type is ValueError
+
+
+def test_mutual_info_for_val_error():
+
     from bspline_mutual_information import mutual_information
+
+    x = [1,2,3,4, "foo"]
+    with pytest.raises(ValueError) as excinfo:
+        mutual_information(x, x)    
+    assert excinfo.type is ValueError
+
+    x = [[1,2,3], [4,5,6]]
+    with pytest.raises(ValueError) as excinfo:
+        mutual_information(x, x)    
+    assert excinfo.type is ValueError
 
     x = [1,2,3,4,5]
     with pytest.raises(ValueError) as excinfo:
