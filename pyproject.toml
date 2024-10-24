@@ -20,6 +20,11 @@ dependencies = [
     "scipy",
 ]
 
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib"
+]
+
 [tool.hatch.version]
 source = "vcs"
 
