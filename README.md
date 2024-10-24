@@ -5,6 +5,14 @@ on B-Spline binning.
 
 This is an adaption of Carsten Daub's R implementation[^1] of the algorithm described in Daub et.al 2004[^2].
 
+## Dependencies:
+- python >= 3.9
+- numpy
+- scipy
+
+## Installation
+It is recommended to first generate a new virtual environment via `venv` or `conda` for testing. 
+Clone the repository and install locally by executing `pip install -e .` from within the root folder of the cloned git repository.
 
 ## References
 
