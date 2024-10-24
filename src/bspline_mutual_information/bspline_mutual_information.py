@@ -165,8 +165,8 @@ def mutual_information(
     If ``min_def`` is defined and less than ``min_def`` positions in 
     both ``x`` and ``y`` are defined the return value will be `None`
 
-    >>> x = np.asarray([1,2,np.nan,4,np.nan])
-    >>> y = np.asarray([1,2,1,None,5])
+    >>> x = [1,2,np.nan,4,np.nan]
+    >>> y = [1,2,1,None,5]
     >>> mi = mutual_information(x, y, bins=5, spline_order=3, min_def=3)
     >>> type(mi)
     NoneType 
