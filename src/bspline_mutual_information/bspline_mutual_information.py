@@ -17,6 +17,8 @@ References
     PMCID: PMC516800.
 """
 
+from typing import Optional
+
 import numpy as np
 from numpy.typing import ArrayLike
 from scipy.interpolate import BSpline
@@ -114,7 +116,7 @@ def mutual_information(
         spline_order: int=1,
         correct: bool=False,
         min_def: int=0,
-    ) -> float | None:
+    ) -> Optional[float]:
     """
     Estimates Mutual Information between two arrays containing continous
     variables. Uses Daub et.al's approach [1]_ to estimate Mutual 
