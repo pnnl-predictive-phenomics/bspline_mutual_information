@@ -33,6 +33,35 @@ Below an example can be found how to use `mutual_information()` to estimate the 
 0.4740122135541802
 ```
 
+If mutual information for pairs of columns in a whole matrix or pandas DataFrame should be calculated this can be done by leveraging pandas `DataFrame.corr()` function. However, since `corr()` does not allow for keyword arguments a helper function needs to be defined first that specifies the arguments `mutual_information` should be executed with. Consider the example below where the helper function `mut_inf(x, y)` is defined as returning the mutual information calculated using the parameters `bins=5`, `spline_order=1` and `correct=True` (which corrects for the finit size effect if `spline_order==1`). Note that `DataFrame.corr()` will always fill the diagonal with `1` values independent of the chosen `method`.
+
+```python
+>>> import pandas as pd
+>>> import bspline_mutual_information as bsp
+>>> data = pd.DataFrame({
+...     'a': [0, 1, 2, 3, 4],
+...     'b': [5, 6, 7, 8, 9],
+...     'c': [0, 1, 2, 1, 0],
+...     'd': [3, 2, 1, 3, 2]
+...     })
+...
+>>> def mut_inf(x, y):
+...     mi = bsp.mutual_information(
+...         x, y,
+...         bins=5,
+...         spline_order=1,
+...         correct=True
+...         )
+...     return mi
+...
+>>> data.corr(method=mutual_info)
+          a         b         c         d
+a  1.000000  1.921928  1.121928  1.121928
+b  1.921928  1.000000  1.121928  1.121928
+c  1.121928  1.121928  1.000000  0.321928
+d  1.121928  1.121928  0.321928  1.000000
+```
+
 ## References
 
 [^1]: [C. Daub's R implementation](https://gitlab.com/daub-lab/mutual_information)
