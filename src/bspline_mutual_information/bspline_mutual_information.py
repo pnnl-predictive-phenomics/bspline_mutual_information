@@ -142,6 +142,9 @@ def mutual_information(
         corresponding number of bins, i.e. a spline order of 3 will 
         assign the data values up to 3 bins with respective weights as 
         determined by the indicator function.
+    correct : bool, default = False
+        Defines whether correction for the finite size effect should be
+        performed. Only available if ``spline_order == 1``.
     min_def : int, default = 0
         Optional value that defines the minimal number of position i 
         that ``x`` and ``y`` must both be defined at, i.e. both values 
