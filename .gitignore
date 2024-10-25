@@ -17,3 +17,6 @@ docs/source/_autosummary/
 
 # hatch-vsc
 _version.py
+
+# dist
+dist/*
