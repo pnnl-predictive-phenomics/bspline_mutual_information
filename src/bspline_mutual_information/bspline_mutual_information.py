@@ -18,6 +18,7 @@ References
 """
 
 from typing import Optional
+from typing import Literal
 import warnings
 
 import numpy as np
@@ -211,6 +212,48 @@ def mutual_information(
     return vals.get("mi", None)
 
 
+def normalized_mutual_information(
+        x: ArrayLike,
+        y: ArrayLike,
+        bins: int=10,
+        spline_order: int=1,
+        correct: bool=False,
+        min_def: int=0,
+        normalization_method: Literal[
+            'min', 'max', 'geometric', 'arithmetric'
+        ]='arithmetric',
+    ) -> Optional[float]:
+    
+    try:
+        vals = _mutual_information_backend(
+            x=x,
+            y=y,
+            bins=bins,
+            spline_order=spline_order,
+            correct=correct,
+            min_def=min_def
+            )
+    except ValueError as e:
+        raise e
+
+    mi = vals.get("mi", None)
+    h_x = vals.get("h_x", None)
+    h_y = vals.get("h_y", None)
+
+    if mi is None:
+        pass
+    elif mi == 0.0:
+        pass
+    else:
+        normalization_denominator = _normalize(
+            h_x=h_x,
+            h_y=h_y,
+            normalization_method=normalization_method
+        )
+        mi = mi / normalization_denominator
+    
+    return mi
+
 
 def _mutual_information_backend(
         x: ArrayLike,
@@ -384,6 +427,22 @@ def _mutual_information_backend(
         }
     
     return ret_dict
+
+
+def _normalize(h_x, h_y, normalization_method):
+    if normalization_method == "min":
+        return min(h_x, h_y)
+    elif normalization_method == "max":
+        return max(h_x, h_y)
+    elif normalization_method == "geometric":
+        return np.sqrt(h_x * h_y)
+    elif normalization_method == "arithmetic":
+        return np.mean([h_x, h_y])
+    else:
+        raise ValueError(
+            "'normalization_method' must be 'min', 'max', 'geometric', "
+            "or 'arithmetic'"
+        )
 
 
 def _transform_data(
