@@ -223,6 +223,117 @@ def normalized_mutual_information(
             'min', 'max', 'geometric', 'arithmetric'
         ]='arithmetric',
     ) -> Optional[float]:
+    """
+    Estimates Normalized Mutual Information between two arrays 
+    containing continous variables.
+    
+    Uses Daub et.al's approach [1]_ to estimate Mutual Information 
+    using B-Spline functions and then normalizes the obtained values.
+    
+    Normalized Mutual Information (NMI) is scaled from 0 to 1, where
+    0 represents no mutual information and 1 perfect correleation of the 
+    values in the two arrays. Note that values up to 1 for perfect 
+    correlation are only achieved if ``spline_order==1``. For higher 
+    values of ``spline_order`` expect values < 1 even if comparing 
+    identical vectors. The method used for normalizing Mutual 
+    Information is defined by ``normalization_method``. Normalization 
+    follows a similar approach to the one found in ``scikit-learn`` 
+    [2]_.
+
+    Parameters
+    ----------
+    x : ArrayLike
+        1-dimensional array like object containing values
+    y : ArrayLike
+        1-dimensional array like object containing values
+    bins : int, default = 10
+        Number of bins to use for the B-Spline based binnig of the 
+        continous values in ``x`` and ``y``. 
+    spline_order : int, default = 1
+        Spline order for the generation of B-Spline functions that are 
+        used to extract bin associations. ``spline_order = 1`` will 
+        result in basic binning. Higher values of ``spline_order`` will 
+        assign the data values of ``x`` and ``y`` up to the 
+        corresponding number of bins, i.e. a spline order of 3 will 
+        assign the data values up to 3 bins with respective weights as 
+        determined by the indicator function.
+    correct : bool, default = False
+        Defines whether correction for the finite size effect should be
+        performed. Only available if ``spline_order == 1``.
+    min_def : int, default = 0
+        Optional value that defines the minimal number of position i 
+        that ``x`` and ``y`` must both be defined at, i.e. both values 
+        at ``x[i]`` and ``y[i]`` must not be NaN. If less than 
+        ``min_def`` positions are defined the return value ``mi`` will 
+        be `None`.
+    normalization_method: {"min", "max", "arithmetic", "geometric"}, \
+                            default = "arithmetic"
+        Optional parameter that defines which normalization approach 
+        should be taken to obtain the NMI.
+
+    Returns
+    -------
+    mi : float
+        Mutual Information estimate for ``x`` and ``y``
+    
+    Example
+    -------
+    By default the chosen normalization method is ``arithmetic`` i.e. 
+    the arithmetic mean between H(x) and H(y) is calculated and MI(x,y) 
+    is devided by the arithmetic mean.
+    
+    >>> from bspline_mutual_information import mutual_information
+    >>> x = [1,2,3,4,5]
+    >>> y = [1,2,1,2,3]
+    >>> normalized_mutual_information(x, y)
+    0.7918756684685216
+
+    Alternatively, ``normalization_method`` can be defined as ``min``,
+    ``max`` or ``geometric``. Below is an example call that sets the 
+    ``normalization_method`` to ``geometric`` (i.e. the square root of
+    the product of H(x) and H(y)).
+
+    >>> x = [1,2,3,4,5]
+    >>> y = [1,2,1,2,3]
+    >>> normalized_mutual_information(
+    ...     x,
+    ...     y,
+    ...     normalization_method="geometric"
+    ... )
+    ...
+    0.8096040720878853  
+
+    Additionally, just like in ``mutual_information`` we can define the 
+    ``spline_order`` and number of ``bins``:
+    
+    >>> x = [1,2,3,4,5]
+    >>> y = [1,2,1,2,3]
+    >>> normalized_mutual_information(x, y, bins=5, spline_order=3)
+    0.21375466439357388
+    
+    Raises
+    ------
+    ValueError
+        If finite size effect correction is set to True
+        (``correct==True``), but the spline order is > 1
+        (``spline_order != 1``).
+    ValueError
+        If ``x`` or ``y`` can not be converted to an array containing 
+        ``float``.
+    ValueError
+        If ``x`` or ``y`` has more than 1 dimension.
+
+    References
+    ----------
+    .. [1] Daub CO, Steuer R, Selbig J, Kloska S. Estimating mutual 
+        information using B-spline functions--an improved similarity 
+        measure for analysing gene expression data. BMC Bioinformatics. 
+        2004 Aug 31;5:118. doi: `10.1186/1471-2105-5-118 
+        <https://doi.org/10.1186/1471-2105-5-118>`. PMID: 15339346; 
+        PMCID: PMC516800.
+    .. [2] https://scikit-learn.org/stable/modules/generated/sklearn.metrics.normalized_mutual_info_score.html
+    """
+
     
     try:
         vals = _mutual_information_backend(
