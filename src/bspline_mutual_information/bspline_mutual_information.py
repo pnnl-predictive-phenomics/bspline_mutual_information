@@ -220,8 +220,9 @@ def normalized_mutual_information(
         correct: bool=False,
         min_def: int=0,
         normalization_method: Literal[
-            'min', 'max', 'geometric', 'arithmetric'
-        ]='arithmetric',
+            'min', 'max', 'geometric', 'arithmetic',
+            'symmetric_uncertainty', 'joint'
+        ]='arithmetic',
     ) -> Optional[float]:
     """
     Estimates Normalized Mutual Information between two arrays 
@@ -266,7 +267,8 @@ def normalized_mutual_information(
         at ``x[i]`` and ``y[i]`` must not be NaN. If less than 
         ``min_def`` positions are defined the return value ``mi`` will 
         be `None`.
-    normalization_method: {"min", "max", "arithmetic", "geometric"}, \
+    normalization_method: {"min", "max", "arithmetic", "geometric", \
+                            "symmetric_uncertainty", "joint"}, \
                             default = "arithmetic"
         Optional parameter that defines which normalization approach 
         should be taken to obtain the NMI.
@@ -331,7 +333,8 @@ def normalized_mutual_information(
         2004 Aug 31;5:118. doi: `10.1186/1471-2105-5-118 
         <https://doi.org/10.1186/1471-2105-5-118>`. PMID: 15339346; 
         PMCID: PMC516800.
-    .. [2] https://scikit-learn.org/stable/modules/generated/sklearn.metrics.normalized_mutual_info_score.html
+    .. [2] `scikit-learn's normalized mutual information
+        <https://scikit-learn.org/stable/modules/generated/sklearn.metrics.normalized_mutual_info_score.html>`
     """
 
     
@@ -350,6 +353,7 @@ def normalized_mutual_information(
     mi = vals.get("mi", None)
     h_x = vals.get("h_x", None)
     h_y = vals.get("h_y", None)
+    h_x_y = vals.get("h_x_y", None)
 
     if mi is None:
         pass
@@ -359,11 +363,12 @@ def normalized_mutual_information(
         normalization_denominator = _normalize(
             h_x=h_x,
             h_y=h_y,
+            h_x_y=h_x_y,
             normalization_method=normalization_method
         )
         mi = mi / normalization_denominator
     
-    return mi
+    return float(mi)
 
 
 def _mutual_information_backend(
@@ -468,6 +473,7 @@ def _mutual_information_backend(
         mi = None
         h_x = None
         h_y = None
+        h_x_y = None
     else:
         try:
             x_bin_associations = bspline_bin(
@@ -496,7 +502,7 @@ def _mutual_information_backend(
             # information to be 'None' if one of the two arrays contains
             # only indentical values.  
             mi = None
-            return {"mi": mi, "h_x": None, "h_y": None}
+            return {"mi": mi, "h_x": None, "h_y": None, "h_x_y": None}
         
         # calculation of probabilities x[i] and y[i] based of the bin(i) 
         # association probabilities as determined by the B-Spline
@@ -535,12 +541,13 @@ def _mutual_information_backend(
         "mi": mi,
         "h_x": h_x,
         "h_y": h_y,
+        "h_x_y": h_x_y
         }
     
     return ret_dict
 
 
-def _normalize(h_x, h_y, normalization_method):
+def _normalize(h_x, h_y, h_x_y, normalization_method):
     if normalization_method == "min":
         return min(h_x, h_y)
     elif normalization_method == "max":
@@ -549,6 +556,10 @@ def _normalize(h_x, h_y, normalization_method):
         return np.sqrt(h_x * h_y)
     elif normalization_method == "arithmetic":
         return np.mean([h_x, h_y])
+    elif normalization_method == "symmetric_uncertainty":
+        return 0.5*(h_x + h_y)
+    elif normalization_method == "joint":
+        return h_x_y
     else:
         raise ValueError(
             "'normalization_method' must be 'min', 'max', 'geometric', "
