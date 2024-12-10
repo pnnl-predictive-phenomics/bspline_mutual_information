@@ -1,7 +1,6 @@
 # bspline_mutual_information
 
-Utility to bin continous variables and estimate mutual information based
-on B-Spline binning.
+Utility to bin continuous variables and estimate mutual information based on B-Spline binning.
 
 This is an adaption of Carsten Daub's R implementation[^1] of the algorithm described in Daub et.al 2004[^2].
 
