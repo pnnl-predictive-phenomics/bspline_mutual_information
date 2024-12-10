@@ -1,0 +1,57 @@
+[build-system]
+requires = [
+    "hatchling", 
+    "hatch-vcs",
+    ]
+build-backend = "hatchling.build"
+
+[project]
+name = "bspline-mutual-information"
+description = "B-spline based mutual information estimator"
+authors = [
+    {name = "Yannick Mahlich", email = "yannick.mahlich@pnnl.gov"},
+]
+maintainers = [
+    {name = "Yannick Mahlich", email = "yannick.mahlich@pnnl.gov"},
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+dynamic = [
+    "version",
+    ]
+dependencies = [
+    "numpy",
+    "scipy",
+]
+
+[project.urls]
+Documentation = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information/-/blob/develop/README.md"
+Issues = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information/-/issues"
+Source = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/bspline_mutual_information/_version.py"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib"
+]
