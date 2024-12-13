@@ -10,8 +10,14 @@ This is an adaption of Carsten Daub's R implementation[^1] of the algorithm desc
 - scipy
 
 ## Installation
-It is recommended to first generate a new virtual environment via `venv` or `conda` for testing. 
-Clone the repository and install locally by executing `pip install -e .` from within the root folder of the cloned git repository.
+
+### pip / git
+The most up-to-date version of the package can be installed by cloning the repository to a local folder and install via `pip` from source:
+```sh
+git clone https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git
+cd bspline_mutual_information
+pip install .
+```
 
 ## Usage
 Once installed the module consits of two functions:
