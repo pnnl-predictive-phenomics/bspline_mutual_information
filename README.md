@@ -12,7 +12,11 @@ This is an adaption of Carsten Daub's R implementation[^1] of the algorithm desc
 ## Installation
 
 ### pip / git
-The most up-to-date version of the package can be installed by cloning the repository to a local folder and install via `pip` from source:
+The most up-to-date version of the package can be installed by specifying the git repository directly in the `pip install` command:
+```sh
+pip install git+https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git
+```
+Alternatively the repository can be cloned to a local folder and installed via `pip` from source:
 ```sh
 git clone https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git
 cd bspline_mutual_information
@@ -24,11 +28,11 @@ Once installed the module consits of two functions:
 - `bspline_mutual_information.bspline_bin()`
 - `bspline_mutual_information.mutual_information()`
 
-`bspline_bin()` is both called internally in `mutual_information` but can also be used to manually bin continuous data into discrete bins if so desired.
+`bspline_bin()` is both called internally in `mutual_information()` but can also be used to manually bin continuous data into discrete bins if so desired.
 
 For this example we will focus on `mutual_information()` since it is the primary use case of this package.
 
-Below an example can be found how to use `mutual_information()` to estimate the mutual information between two vectors containing continuous data points. It assumes a python environment.
+An example can be found below on how to use `mutual_information()` to estimate the mutual information between two vectors containing continuous data points. It assumes a python environment.
 
 ```python
 >>> from bspline_mutual_information import mutual_information
@@ -38,7 +42,7 @@ Below an example can be found how to use `mutual_information()` to estimate the 
 0.4740122135541802
 ```
 
-If mutual information for pairs of columns in a whole matrix or pandas DataFrame should be calculated this can be done by leveraging pandas `DataFrame.corr()` function. However, since `corr()` does not allow for keyword arguments a helper function needs to be defined first that specifies the arguments `mutual_information` should be executed with. Consider the example below where the helper function `mut_inf(x, y)` is defined as returning the mutual information calculated using the parameters `bins=5`, `spline_order=1` and `correct=True` (which corrects for the finit size effect if `spline_order==1`). Note that `DataFrame.corr()` will always fill the diagonal with `1` values independent of the chosen `method`.
+If mutual information for pairs of columns in a whole matrix or pandas DataFrame should be calculated this can be done by leveraging pandas `DataFrame.corr()` function. However, since `corr()` does not allow for keyword arguments a helper function needs to be defined first that specifies the arguments `mutual_information()` should be executed with. Consider the example below where the helper function `mut_inf(x, y)` is defined as returning the mutual information calculated using the parameters `bins=5`, `spline_order=1` and `correct=True` (which corrects for the finit size effect if `spline_order==1`). Note that `DataFrame.corr()` will always fill the diagonal with `1` values independent of the chosen `method`.
 
 ```python
 >>> import pandas as pd
@@ -59,7 +63,7 @@ If mutual information for pairs of columns in a whole matrix or pandas DataFrame
 ...         )
 ...     return mi
 ...
->>> data.corr(method=mutual_info)
+>>> data.corr(method=mut_inf)
           a         b         c         d
 a  1.000000  1.921928  1.121928  1.121928
 b  1.921928  1.000000  1.121928  1.121928
