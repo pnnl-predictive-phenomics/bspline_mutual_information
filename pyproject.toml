@@ -16,7 +16,7 @@ maintainers = [
 ]
 requires-python = ">=3.9"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
@@ -29,21 +29,22 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: BSD License",
 ]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = {text = "2-clause BSD"}
 dynamic = [
     "version",
     ]
 dependencies = [
-    "numpy",
-    "scipy",
+    "numpy >= 1.22.0",
+    "scipy >= 1.9.0", 
 ]
 
 [project.urls]
-Documentation = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information/-/blob/develop/README.md"
-Issues = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information/-/issues"
-Source = "https://tanuki.pnnl.gov/VaLPAS/bspline_mutual_information"
+Documentation = "https://github.com/pnnl-predictive-phenomics/bspline_mutual_information/blob/main/README.md"
+Issues = "https://github.com/pnnl-predictive-phenomics/bspline_mutual_information/issues"
+Repository = "https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git"
 
 [tool.hatch.version]
 source = "vcs"
