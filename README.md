@@ -6,17 +6,21 @@ This is an adaption of Carsten Daub's R implementation[^1] of the algorithm desc
 
 ## Dependencies:
 - python >= 3.9
-- numpy
-- scipy
+- numpy >= 1.22.0
+- scipy >= 1.9.0
 
 ## Installation
-
-### pip / git
-The most up-to-date version of the package can be installed by specifying the git repository directly in the `pip install` command:
+### Recommended
+The easiest way to install the package is directly via `pip`:
+```sh
+pip install bspline-mutual-information
+```
+### Alternative
+The most up-to-date version of the package can be also be installed by specifying the git repository directly in the `pip install` command
 ```sh
 pip install git+https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git
 ```
-Alternatively the repository can be cloned to a local folder and installed via `pip` from source:
+or alternatively, cloning the repository to a local folder and installed via `pip` from source:
 ```sh
 git clone https://github.com/pnnl-predictive-phenomics/bspline_mutual_information.git
 cd bspline_mutual_information
